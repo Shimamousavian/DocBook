@@ -16,24 +16,30 @@ DocBook is a Django-based web application that allows patients to book appointme
 1. **Login/Registration**:
    - Users can sign in or register using the registration form.
    - Registered users can manage appointments via the dashboard.
+     ![alt text](DocBook/screenshots/login.png)  
+
 
 2. **Search Doctors**:
    - Search by name or specialization using the search bar on the dashboard.
    - Results display dynamically without reloading the page.
-
+   ![alt text](DocBook/screenshots/search.jpg)
 3. **View Doctor Schedule**:
    - Click on a doctor from the search results to view their available time slots.
-   - Slots are color-coded:
-     - **Green**: Available
-     - **Red**: Taken
-     - **Blue**: Reserved by the user
+       ![alt text](DocBook/screenshots/viewschedule.png)
 
 4. **Book Appointment**:
    - Select a time slot and confirm the appointment.
    - Notifications display the booking status.
+     ![alt text](DocBook/screenshots/notification.png)
+   - Slots are color-coded:
+     - **Green**: Available
+     - **Red**: Taken
+     - **Blue**: Reserved by the user
+      ![alt text](DocBook/screenshots/schedule.png)
 
 5. **Dashboard Management**:
    - View all appointments with details (doctor, date, status).
+     ![alt text](DocBook/screenshots/appointments.png)
 
 ### Admin Workflow
 - Admin users can manage doctors, appointments, and other related data through the Django admin panel.
