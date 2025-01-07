@@ -96,7 +96,6 @@ DocBook is a Django-based web application that allows patients to book appointme
      DB_PASSWORD=your_password
      DB_HOST=localhost
      DB_PORT=5432
-     SECRET_KEY=your_django_secret_key
      ```
 
 5. **Run migrations**:
@@ -105,11 +104,12 @@ DocBook is a Django-based web application that allows patients to book appointme
    ```
 
 6. **Create a superuser**:
+   - This user will be your admin user in the project.
    ```bash
    python manage.py createsuperuser
    ```
 
-7. **Run the development server**:
+8. **Run the development server**:
    ```bash
    python manage.py runserver
    ```
