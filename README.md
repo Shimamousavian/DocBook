@@ -1,3 +1,4 @@
+---
 # DocBook - Doctor Appointment Booking System
 
 ## Overview
@@ -16,16 +17,16 @@ DocBook is a Django-based web application that allows patients to book appointme
 1. **Login/Registration**:
    - Users can sign in or register using the registration form.
    - Registered users can manage appointments via the dashboard.
-     ![alt text](DocBook/screenshots/login.png)  
-
+     ![alt text](DocBook/screenshots/login.png)
 
 2. **Search Doctors**:
    - Search by name or specialization using the search bar on the dashboard.
    - Results display dynamically without reloading the page.
-   ![alt text](DocBook/screenshots/search.jpg)
+     ![alt text](DocBook/screenshots/search.jpg)
+
 3. **View Doctor Schedule**:
    - Click on a doctor from the search results to view their available time slots.
-       ![alt text](DocBook/screenshots/viewschedule.png)
+     ![alt text](DocBook/screenshots/viewschedule.png)
 
 4. **Book Appointment**:
    - Select a time slot and confirm the appointment.
@@ -35,7 +36,7 @@ DocBook is a Django-based web application that allows patients to book appointme
      - **Green**: Available
      - **Red**: Taken
      - **Blue**: Reserved by the user
-      ![alt text](DocBook/screenshots/schedule.png)
+       ![alt text](DocBook/screenshots/schedule.png)
 
 5. **Dashboard Management**:
    - View all appointments with details (doctor, date, status).
@@ -56,26 +57,60 @@ DocBook is a Django-based web application that allows patients to book appointme
 - **Authentication**: Django's built-in authentication system
 
 ## Installation
-1. Clone the repository:
+
+### Prerequisites
+- Python 3.9+
+- PostgreSQL
+- pip (Python package manager)
+
+### Steps
+1. **Clone the repository**:
    ```bash
    git clone https://github.com/Shimamousavian/DocBook.git
    cd DocBook
    ```
-2. Install dependencies:
+
+2. **Create a virtual environment**:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # For Linux/Mac
+   .venv\Scripts\activate     # For Windows
+   ```
+
+3. **Install dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
-3. Configure the database in `settings.py`.
-4. Apply migrations:
+
+4. **Set up the database**:
+   - Create a PostgreSQL database (e.g., `docbook_db`).
+   - Add your database credentials to a `.env` file in the project root:
+     ```
+     DB_NAME=docbook_db
+     DB_USER=your_username
+     DB_PASSWORD=your_password
+     DB_HOST=localhost
+     DB_PORT=5432
+     SECRET_KEY=your_django_secret_key
+     ```
+
+5. **Run migrations**:
    ```bash
    python manage.py migrate
    ```
-5. Run the development server:
+
+6. **Create a superuser**:
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+7. **Run the development server**:
    ```bash
    python manage.py runserver
    ```
 
-## Usage
-1. Access the app at `http://127.0.0.1:8000/`.
-2. Register as a patient, log in, and start booking appointments.
-3. Admins can manage the application through the admin panel at `/admin`.
+### Access the Application
+- Open your browser and go to `http://127.0.0.1:8000/`.
+- Admin panel is accessible at `http://127.0.0.1:8000/admin/`.
+
+---
