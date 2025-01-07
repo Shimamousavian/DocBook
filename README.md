@@ -43,8 +43,13 @@ DocBook is a Django-based web application that allows patients to book appointme
      ![alt text](DocBook/screenshots/appointments.png)
 
 ### Admin Workflow
-- Admin users can manage doctors, appointments, and other related data through the Django admin panel.
+- Admin login page.
+  
+   ![alt text](DocBook/screenshots/adminlogin.png)
 
+- Admin users can manage doctors, appointments, and other related data through the Django admin panel.
+  
+   ![alt text](DocBook/screenshots/adminpanel.png)
 ## API Endpoints
 - **Search Doctors**: `/api/doctors/search/`
   - Accepts query parameters (`q`) for searching by name or specialization.
