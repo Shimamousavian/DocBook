@@ -52,8 +52,8 @@ DocBook is a Django-based web application that allows patients to book appointme
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Shimamousavian/docbook.git
-   cd docbook
+   git clone https://github.com/Shimamousavian/DocBook.git
+   cd DocBook
    ```
 2. Install dependencies:
    ```bash
