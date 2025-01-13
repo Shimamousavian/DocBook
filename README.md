@@ -1,3 +1,4 @@
+
 ---
 # DocBook - Doctor Appointment Booking System
 
@@ -50,6 +51,7 @@ DocBook is a Django-based web application that allows patients to book appointme
 - Admin users can manage doctors, appointments, and other related data through the Django admin panel.
   
    ![alt text](DocBook/screenshots/adminpanel.png)
+
 ## API Endpoints
 - **Search Doctors**: `/api/doctors/search/`
   - Accepts query parameters (`q`) for searching by name or specialization.
@@ -61,61 +63,55 @@ DocBook is a Django-based web application that allows patients to book appointme
 - **Database**: PostgreSQL
 - **Authentication**: Django's built-in authentication system
 
-## Installation
+## Running the Project with Docker
 
 ### Prerequisites
-- Python 3.9+
-- PostgreSQL
-- pip (Python package manager)
+To run this project, you need Docker installed and running on your system.
 
-### Steps
+### Steps to Run the Project
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/Shimamousavian/DocBook.git
    cd DocBook
    ```
-
-2. **Create a virtual environment**:
+2. **Create a .env file in the root of the project (the directory that includes Dockerfile)**:
+   - Open the .env file and configure the following variables according to your preferences:
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # For Linux/Mac
-   .venv\Scripts\activate     # For Windows
+   # Example .env configuration
+   DATABASE_NAME=docbook           # Name of the PostgreSQL database
+   DATABASE_USER=admin             # Database username
+   DATABASE_PASSWORD=password      # Database password
+   DATABASE_HOST=db                # Hostname for the database container
+   DATABASE_PORT=5432              # Port for connecting to the database
+   DEBUG=1                         # Debug mode (set to 0 for production)
+
    ```
 
-3. **Install dependencies**:
+3. **Build and Start the Docker Containers**:
    ```bash
-   pip install -r requirements.txt
+   docker-compose up --build -d
    ```
 
-4. **Set up the database**:
-   - Create a PostgreSQL database (e.g., `docbook_db`).
-   - Add your database credentials to a `.env` file in the project root:
-     ```
-     DB_NAME=docbook_db
-     DB_USER=your_username
-     DB_PASSWORD=your_password
-     DB_HOST=localhost
-     DB_PORT=5432
-     ```
-
-5. **Run migrations**:
+4. **Run Migrations**:
+   - Initialize the database schema.
    ```bash
-   python manage.py migrate
+   docker-compose exec web python manage.py migrate
    ```
 
-6. **Create a superuser**:
-   - This user will be your admin user in the project.
+5. **Create a Superuser**:
+   - Set up an admin user to access the admin panel.
    ```bash
-   python manage.py createsuperuser
+   docker-compose exec web python manage.py createsuperuser
    ```
 
-8. **Run the development server**:
-   ```bash
-   python manage.py runserver
-   ```
+6. **Access the Application**:
+   - Open your browser and go to `http://localhost:8000/`.
+   - Admin panel is accessible at `http://localhost:8000/admin/`.
 
-### Access the Application
-- Open your browser and go to `http://127.0.0.1:8000/`.
-- Admin panel is accessible at `http://127.0.0.1:8000/admin/`.
+7. **Stopping the Project**:
+   - To stop and remove the containers:
+   ```bash
+   docker-compose down
+   ```
 
 ---
