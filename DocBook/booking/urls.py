@@ -5,7 +5,7 @@ urlpatterns = [
     # Frontend pages
     path('', views.index, name='index'),
     path('login/', views.login_view, name='login'),
-    path('dashboard/', views.dashboard, name='dashboard'),
+    path('dashboard/', views.user_dashboard, name='user_dashboard'),
     path('logout/', views.logout_view, name='logout'),
     path('register/', views.user_registration, name='register'),
     path('doctor/<int:doctor_id>/', views.doctor_details, name='doctor_details'),
