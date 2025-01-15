@@ -5,15 +5,14 @@
 {% block content %}
 <div class="login-form">
     <h2>Login</h2>
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert {% if message.tags == 'error' %}error-message{% elif message.tags == 'success' %}success-message{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}error-message{% elif message.tags == 'success' %}success-message{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
     <form method="post">
-        {% csrf_token %}
         <div class="form-group">
             <input type="text" id="username" name="username" placeholder="Username" required>
         </div>
