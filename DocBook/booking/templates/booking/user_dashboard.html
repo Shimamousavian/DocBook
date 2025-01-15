@@ -1,0 +1,114 @@
+{% extends "booking/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<header>
+    <nav class="navbar">
+        <div lass="navbar-left">
+            {% if user.is_authenticated %}
+                {% if user_role == 'doctor' %}
+                <span class="username">Dr. {{ user.username }}</span>
+                    {% else %}
+                    <span class="username">{{ user.username }}</span>
+                    {% endif %}
+                
+            {% endif %}
+        </div>
+        <div class="navbar-center">
+            <span>My Dashboard</span>
+        </div>
+        <div class="navbar-right">
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="btn-logout">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-login">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+
+<div class="dashboard">
+    {% if user_role == 'patient' %}
+    <div class="search">
+        <h3 class="search-heading">Search for Doctors</h3>
+        <form method="get">
+            <input class="search-bar" type="text" name="q" placeholder="Search doctors by name or specialization..." required>
+            <button type="submit" class="btn-primary">Search</button>
+        </form>
+
+        {% if search_results %}
+            <table class="doctor-table">
+                <thead>
+                    <tr>
+                        <th>Doctor Name</th>
+                        <th>Specialization</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doctor in search_results %}
+                            <tr>
+                                <td>
+                                    {% if user_role == 'doctor' %}
+                                        Dr. {{ doctor.user.username }}
+                                    {% else %}
+                                        {{ doctor.user.username }}
+                                    {% endif %}
+                                </td>
+                                <td>{{ doctor.get_specialization_display }}</td>
+                                <td><a href="{% url 'doctor_details' doctor.id %}" class="btn-primary">View Schedule</a></td>
+                            </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        {% else %}
+            <p style="color:red">No doctors found.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="appointments">
+        <h3 class="appointments-heading">My Appointments</h3>
+
+        {% if appointments %}
+            <table class="doctor-table">
+                <thead>
+                    <tr>
+                        {% if user_role == 'patient' %}
+                        <th>Doctor Name</th>
+                        {% else %}
+                        <th>Patient Name</th>
+                        {% endif %}
+                        <th>Appointment Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for appointment in appointments %}
+                    <tr>
+                        {% if user_role == 'patient' %}
+                            <td>
+                                {% if appointment.doctor %}
+                                    Dr. {{ appointment.doctor.user.username }}
+                                {% else %}
+                                    {{ appointment.doctor.user.username }}
+                                {% endif %}
+                            </td>
+                        {% else %}
+                            <td>{{ appointment.patient.user.username }}</td>
+                        {% endif %}
+                        <td>{{ appointment.date_time }}</td>
+                        <td>{{ appointment.status }}</td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        {% else %}
+            <p style="color:red">No Appointments found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
