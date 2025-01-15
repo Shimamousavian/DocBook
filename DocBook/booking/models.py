@@ -42,19 +42,11 @@ class Doctor(models.Model):
         ('psychiatry', 'Psychiatry'),
     ]
 
-    name = models.CharField(max_length=150)
-    specialization = models.CharField(max_length=50, choices=SPECIALIZATIONS)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    specialization = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.name} ({self.get_specialization_display()})"
-
-    @staticmethod
-    def search_doctors(criteria):
-        if not criteria.strip():
-            return Doctor.objects.all()  # Return all doctors if no criteria
-        return Doctor.objects.filter(
-            Q(name__icontains=criteria) | Q(specialization__icontains=criteria)
-        )
+        return f"{self.user.username} - {self.specialization}"
 
     @staticmethod
     def get_available_slots(self):
@@ -73,7 +65,7 @@ class Doctor(models.Model):
         return available_slots
 
     def get_specialization_display(self):
-        return self.specialization
+        return dict(self.SPECIALIZATIONS).get(self.specialization, self.specialization)
 
     def get_reserved_slots(self):
         reserved_slots = {}
@@ -95,7 +87,7 @@ class Review(models.Model):
 
 
 class Patient(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=False, default=1)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     medical_history = models.TextField(blank=True, null=True)
 
     def __str__(self):
