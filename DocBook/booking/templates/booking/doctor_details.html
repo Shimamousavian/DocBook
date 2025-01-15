@@ -4,11 +4,11 @@
 {% block content %}
 <div class="doctor-details">
     <!-- Back to Dashboard Button -->
-    <a href="{% url 'dashboard' %}" class="btn-back">
+    <a href="{% url 'user_dashboard' %}" class="btn-back">
         <span>&#8592;</span> Back to Dashboard
     </a>
 
-    <h2>Dr. {{ doctor.name }}</h2>
+    <h2>Dr. {{ doctor.user.username }}</h2>
     <p>Specialization: {{ doctor.get_specialization_display }}</p>
 
     <h3>Available Slots (from 16:00 to 22:00)</h3>
@@ -39,7 +39,6 @@
     </table>
 
     <form id="appointment-form" method="POST">
-        {% csrf_token %}
         <input type="hidden" id="selected_time" name="selected_time">
         <button type="submit" class="btn btn-primary">Confirm Appointment</button>
     </form>
