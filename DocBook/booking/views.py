@@ -18,72 +18,103 @@ from .forms import UserRegistrationForm
 def index(request):
     return render(request, 'booking/index.html')
 
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.db.models import Q
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Doctor, Patient, Appointment
+
 def user_registration(request):
+    """Handles user registration for doctors and patients."""
     if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            confirm_password = form.cleaned_data['confirm_password']
-            medical_history = form.cleaned_data['medical_history']
+        # Extract form data
+        user_type = request.POST.get('user_type')  # "doctor" or "patient"
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '').strip()
+        confirm_password = request.POST.get('confirm_password', '').strip()
 
-            # Check if the username is already taken
-            if User.objects.filter(username=username).exists():
-                form.add_error('username', 'This username is already taken!')
-            else:
-                # Check if passwords match
-                if password != confirm_password:
-                    form.add_error('confirm_password', "Passwords don't match!")
-                else:
-                    # Create the user and patient profile
-                    user = User.objects.create_user(username=username, password=password)
-                    Patient.objects.create(user=user, medical_history=medical_history)
+        # Validation: Check if username is already taken
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'This username is already taken!')
+            return render(request, 'booking/register.html', {'user_type': user_type})
 
-                    # Redirect to login page with a success message
-                    messages.success(request, 'Your account has been created successfully!')
-                    return redirect('login')
-    else:
-        form = UserRegistrationForm()
+        # Validation: Check if passwords match
+        if password != confirm_password:
+            messages.error(request, "Passwords don't match!")
+            return render(request, 'booking/register.html', {'user_type': user_type})
 
-    return render(request, 'booking/register.html', {'form': form})
+        # Create user
+        user = User.objects.create_user(username=username, password=password)
 
+        # Create doctor or patient profile based on user_type
+        if user_type == 'doctor':
+            specialization = request.POST.get('specialization', '').strip()
+            if not specialization:
+                messages.error(request, 'Specialization is required for doctors!')
+                user.delete()  # Rollback user creation
+                return render(request, 'booking/register.html', {'user_type': user_type})
+            Doctor.objects.create(user=user, specialization=specialization)
+
+        elif user_type == 'patient':
+            medical_history = request.POST.get('medical_history', '').strip()
+            Patient.objects.create(user=user, medical_history=medical_history)
+
+        # Success message and redirect
+        messages.success(request, 'Your account has been created successfully!')
+        return redirect('login')
+
+    return render(request, 'booking/register.html')
 
 
 def login_view(request):
+    """Handles user login."""
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        # Extract credentials
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '').strip()
 
+        # Authenticate user
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('dashboard')
+            return redirect('user_dashboard')
         else:
-            messages.error(request, 'Invalid credentials.')
+            messages.error(request, 'Invalid username or password.')
+
     return render(request, 'booking/login.html')
 
 
-
 @login_required
-def dashboard(request):
+def user_dashboard(request):
     query = request.GET.get('q', '')
     search_results = []
 
     if query:
         search_results = Doctor.objects.filter(
-            Q(name__icontains=query) | Q(specialization__icontains=query)
+            (Q(user__username__icontains=query) | Q(specialization__icontains=query)) & Q(user__isnull=False)
         )
 
-    try:
-        # Get the logged-in user's appointments
+    appointments = []
+    if hasattr(request.user, 'patient'):
+        # If the logged-in user is a patient, fetch their appointments
         appointments = Appointment.objects.filter(patient=request.user.patient).order_by('date_time')
-    except Appointment.DoesNotExist:
+        user_role = 'patient'
+    elif hasattr(request.user, 'doctor'):
+        # If the logged-in user is a doctor, fetch their appointments
+        appointments = Appointment.objects.filter(doctor=request.user.doctor).order_by('date_time')
+        user_role = 'doctor'
+    else:
         appointments = []
+        user_role = 'unknown'
 
-    return render(request, 'booking/dashboard.html', {
+    return render(request, 'booking/user_dashboard.html', {
         'appointments': appointments,
         'search_results': search_results,
+        'user_role': user_role,
     })
+
 
 
 @login_required
@@ -136,7 +167,7 @@ def doctor_details(request, doctor_id):
 
             return JsonResponse({
                 "success": True,
-                "message": f"{user.username}, you reserved {time} on {day} with Dr. {doctor.name}.",
+                "message": f"{user.username}, you reserved {time} on {day} with Dr. {doctor.user.username}.",
             })
 
         except Exception as e:
@@ -216,7 +247,7 @@ def book_appointment(request):
     # Create a notification for the patient
     Notification.objects.create(
         user=request.user,
-        message=f'Your appointment with Dr. {doctor.name} on {selected_time} is confirmed.'
+        message=f'Your appointment with Dr. {doctor.user.username} on {selected_time} is confirmed.'
     )
 
     return Response({'message': 'Appointment booked successfully'}, status=status.HTTP_201_CREATED)
@@ -241,7 +272,7 @@ def search_doctors(request):
         doctors = Doctor.objects.all()
     else:
         doctors = Doctor.objects.filter(
-            Q(name__icontains=query) | Q(specialization__icontains=query)
+            Q(user__username__icontains=query) | Q(specialization__icontains=query)
         )
     serializer = DoctorSerializer(doctors, many=True)
     return Response(serializer.data)
