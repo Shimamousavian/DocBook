@@ -119,59 +119,135 @@ header {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* General container styles */
 .login-container {
     width: 360px;
     padding: 8% 0 0;
     margin: auto;
 }
 
-
+/* Form styling */
 .login-form {
-  position: relative;
-  z-index: 1;
-  background: #FFFFFF;
-  max-width: 360px;
-  margin: 0 auto 100px;
-  padding: 50px;
-  text-align: center;
-  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    position: relative;
+    z-index: 1;
+    background: #ffffff;
+    max-width: 360px;
+    margin: 0 auto 100px;
+    padding: 50px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.1);
 }
-.form-group input {
 
-  font-family: "Roboto", sans-serif;
-  outline: 0;
-  background: #f2f2f2;
-  width: 100%;
-  border: 0;
-  margin: 0 0 15px;
-  padding: 15px;
-  box-sizing: border-box;
-  font-size: 14px;
+/* Input fields styling */
+.form-group input,
+.form-group select,
+.form-group textarea {
+    font-family: "Roboto", sans-serif;
+    outline: none;
+    background: #f9f9f9;
+    width: 100%;
+    border: 1px solid #ddd;
+    margin: 0 0 20px;
+    padding: 15px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
 }
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #007BFF;
+    background: #ffffff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+}
+
+/* Dropdown styling for specialization */
+#doctor_fields select {
+    background: linear-gradient(135deg, #e3f2fd, #ffffff);
+    font-weight: 500;
+    border: 2px solid #007BFF;
+}
+
+/* Textarea styling for medical history */
+#patient_fields textarea {
+    background: linear-gradient(135deg, #fffde7, #ffffff);
+    font-family: "Courier New", monospace;
+    height: 120px;
+    resize: none;
+    color: #555;
+    border: 2px solid #FFC107;
+}
+
+/* Submit button styling */
 .login-form button {
-  font-family: "Roboto", sans-serif;
-  text-transform: uppercase;
-  outline: 0;
-  background: #007BFF;
-  width: 100%;
-  border: 0;
-  padding: 15px;
-  color: #FFFFFF;
-  font-size: 14px;
-  cursor: pointer;
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: none;
+    background: linear-gradient(135deg, #007BFF, #0056b3);
+    width: 100%;
+    border: none;
+    padding: 15px;
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
 }
-.login-form button:hover,.form button:active,.form button:focus {
-  background: #107BFF;
+
+.login-form button:hover {
+    background: linear-gradient(135deg, #0056b3, #003f7f);
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
 }
+
+/* Message link styling */
 .login-form .message {
-  margin: 15px 0 0;
-  color: #019EFF;
-  font-size: 12px;
+    margin: 15px 0 0;
+    color: #019EFF;
+    font-size: 12px;
 }
+
 .login-form .message a {
-  color: #4CAF50;
-  text-decoration: none;
+    color: #4CAF50;
+    text-decoration: none;
 }
+
+.login-form .message a:hover {
+    text-decoration: underline;
+}
+
+/* Error messages */
+.alert.error-message {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-size: 12px;
+    text-align: center;
+    border: 1px solid #f5c6cb;
+}
+
+/* Visibility classes for doctor/patient sections */
+#doctor_fields,
+#patient_fields {
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+    overflow: hidden;
+}
+
+.hidden {
+    opacity: 0;
+    max-height: 0;
+    pointer-events: none;
+}
+
+.visible {
+    opacity: 1;
+    max-height: 200px; /* Adjust as needed */
+}
+
 
 .welcome {
     backdrop-filter: blur(10px);
@@ -404,3 +480,5 @@ header {
     border-radius: 5px;
     font-size: 14px;
 }
+
+
